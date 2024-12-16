@@ -1,0 +1,36 @@
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import { swaggerSpec, swaggerUi } from './swagger.js'; // Import Swagger configuration
+
+//app setup
+const app = express();
+
+//cors setup
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : "*",
+    credentials: true,
+  })
+);
+
+//middleware setup
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(morgan('dev'));
+
+//default router
+app.get('/', (req, res) => {
+    res.send('This is a default route api_domain for Uber clone <br><a href="/api-docs">API Documentation</a>');
+});
+
+// Swagger setup
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+//routes setup  
+import userRouter from './routes/user.routes.js';
+app.use('/api/v1/user', userRouter);
+
+export default app;
