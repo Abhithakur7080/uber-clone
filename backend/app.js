@@ -4,6 +4,10 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { swaggerSpec, swaggerUi } from './swagger.js'; // Import Swagger configuration
 
+//router imports
+import userRouter from './routes/user.routes.js';
+import captainRouter from './routes/captain.routes.js';
+
 //app setup
 const app = express();
 
@@ -30,7 +34,7 @@ app.get('/', (req, res) => {
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //routes setup  
-import userRouter from './routes/user.routes.js';
 app.use('/api/v1/user', userRouter);
+app.use("/api/v1/captain", captainRouter);
 
 export default app;
