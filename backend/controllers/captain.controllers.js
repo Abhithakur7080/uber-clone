@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import { Captain } from "../modals/captain.model.js";
+import { BlackListToken } from "../modals/blacklistToken.model.js";
 import expressAsyncHandler from "express-async-handler";
 import captainService from "../services/captain.service.js";
 
@@ -33,4 +34,36 @@ const registerCaptain = expressAsyncHandler(async (req, res) => {
     .json({ message: "Captain created successfully", captain, token });
 });
 
-export default { registerCaptain };
+const loginCaptain = expressAsyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const captain = await Captain.findOne({ email }).select("+password");
+  if (!captain) {
+    return res.status(401).json({ message: "Invalid Email or Password" });
+  }
+  const isValid = await captain.comparePassword(password);
+  if (!isValid) {
+    return res.status(401).json({ message: "Invalid Email or Password" });
+  }
+  const token = captain.generateAuthToken();
+
+  res.cookie("token", token);
+  return res.status(200).json({ message: "Login successful", captain, token });
+});
+
+const  getCaptainProfile = expressAsyncHandler(async (req, res) => {
+  const captain = req.captain;
+  return res.status(200).json({ captain });
+})
+
+const logoutCaptain = expressAsyncHandler(async (req, res) => {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  await BlackListToken.create({ token });
+  res.clearCookie("token");
+  return res.status(200).json({ message: "Logout successful" });
+})
+
+export default { registerCaptain, loginCaptain, getCaptainProfile, logoutCaptain };

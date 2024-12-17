@@ -56,7 +56,7 @@ const  getUserProfile = expressAsyncHandler(async (req, res) => {
 })
 
 const logoutUser = expressAsyncHandler(async (req, res) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   await BlackListToken.create({ token });
   res.clearCookie("token");
   return res.status(200).json({ message: "Logout successful" });
