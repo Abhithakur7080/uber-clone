@@ -42,7 +42,7 @@ Authenticates a user using their email and password, returning a JWT token upon 
 
 ### Endpoint
 
-`/users/login`
+`/user/login`
 
 ### Request Body
 
