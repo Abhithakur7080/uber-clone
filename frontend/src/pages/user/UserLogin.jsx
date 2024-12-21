@@ -1,21 +1,31 @@
 import React from "react";
-import logo from "../assets/Uber-logo.png";
-import { Link } from "react-router-dom";
+import logo from "../../assets/Uber-logo.png";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { userLogin } from "../../redux/slices/user.slice";
 
 const UserLogin = () => {
   const {
     handleSubmit,
     register,
     formState: { errors },
+    resetField
   } = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const onLoginSubmit = (data) => {
-    console.log(data);
+  const onLoginSubmit = async (data) => {
+    const user = dispatch(userLogin(data));
+    if (user) {
+      navigate("/home");
+    }
+    resetField("email");
+    resetField("password");
   };
 
   return (
-    <div className="p-7 flex justify-between flex-col h-screen">
+    <div className="p-7 flex justify-between flex-col h-screen w-screen md:w-[50vw] md:max-w-[520px] md:ml-12 max-h-screen sm:max-h-[90vh] overflow-y-auto  bg-white bg-opacity-70">
       <form onSubmit={handleSubmit(onLoginSubmit)}>
         <img className="w-16 mb-10" src={logo} alt="logo" />
         <div className="mb-7">
@@ -23,7 +33,7 @@ const UserLogin = () => {
           <input
             type="email"
             placeholder="email@example.com"
-            className={`bg-[#eee] rounded px-4 py-2 w-full border text-lg placeholder:text-base ${
+            className={`bg-white rounded px-4 py-2 w-full border text-lg placeholder:text-base ${
               errors.email ? "border-red-500" : ""
             }`}
             {...register("email", { required: "Email is required" })}
@@ -39,7 +49,7 @@ const UserLogin = () => {
           <input
             type="password"
             placeholder="password"
-            className={`bg-[#eee] rounded px-4 py-2 w-full border text-lg placeholder:text-base ${
+            className={`bg-white rounded px-4 py-2 w-full border text-lg placeholder:text-base ${
               errors.password ? "border-red-500" : ""
             }`}
             {...register("password", { required: "Password is required" })}

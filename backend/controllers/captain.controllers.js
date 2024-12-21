@@ -51,6 +51,7 @@ const loginCaptain = expressAsyncHandler(async (req, res) => {
   const token = captain.generateAuthToken();
 
   res.cookie("token", token);
+  res.cookie("role", "captain");
   return res.status(200).json({ message: "Login successful", captain, token });
 });
 
@@ -63,6 +64,7 @@ const logoutCaptain = expressAsyncHandler(async (req, res) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   await BlackListToken.create({ token });
   res.clearCookie("token");
+  res.clearCookie("role");
   return res.status(200).json({ message: "Logout successful" });
 })
 

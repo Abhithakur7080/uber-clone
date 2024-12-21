@@ -47,6 +47,7 @@ const loginUser = expressAsyncHandler(async (req, res) => {
   const token = user.generateAuthToken();
 
   res.cookie("token", token);
+  res.cookie("role", "user");
   return res.status(200).json({ message: "Login successful", user, token });
 });
 
@@ -59,6 +60,7 @@ const logoutUser = expressAsyncHandler(async (req, res) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   await BlackListToken.create({ token });
   res.clearCookie("token");
+  res.clearCookie("role");
   return res.status(200).json({ message: "Logout successful" });
 })
 export default {

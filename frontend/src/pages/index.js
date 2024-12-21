@@ -1,8 +1,9 @@
-import UserLogin from "./UserLogin";
-import UserSignup from "./UserSignup";
-import CaptainLogin from "./CaptainLogin";
-import CaptainSignup from "./CaptainSignup";
-import Home from "./Home";
+import CaptainLogin from "./captain/CaptainLogin";
+import CaptainSignup from "./captain/CaptainSignup";
+import UserLogin from "./user/UserLogin";
+import UserSignup from "./user/UserSignup";
+import Start from "./Start";
+import Home from "./user/Home";
 
 
 export {
@@ -10,5 +11,6 @@ export {
     UserSignup,
     CaptainLogin,
     CaptainSignup,
+    Start,
     Home
 }
